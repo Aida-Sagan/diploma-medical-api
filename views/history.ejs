@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>История болезней</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+
+  <h2 class="mb-4">История болезней</h2>
+
+  <ul class="list-group mb-4">
+    <% history.forEach(h => { %>
+      <li class="list-group-item">
+        <strong><%= h.fullName %></strong>: <%= h.diagnosis %> — <%= h.notes %>
+      </li>
+    <% }) %>
+  </ul>
+
+  <h3 class="mb-3">Добавить диагноз</h3>
+  <form method="POST" action="/history">
+    <div class="mb-3">
+      <label class="form-label">Пациент:</label>
+      <select name="patientId" class="form-select">
+        <% patients.forEach(p => { %>
+          <option value="<%= p.id %>"><%= p.fullName %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Диагноз:</label>
+      <input type="text" name="diagnosis" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Примечание:</label>
+      <textarea name="notes" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+  </form>
+
+  <a class="btn btn-outline-primary mt-3" href="/">Пациенты</a>
+  <a class="btn btn-outline-secondary mt-3 ms-2" href="/appointments">Приёмы</a>
+
+</body>
+</html>
