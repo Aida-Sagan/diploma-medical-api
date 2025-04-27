@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Приёмы</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="container mt-4">
 
@@ -11,8 +12,19 @@
 
   <ul class="list-group mb-4">
     <% appointments.forEach(a => { %>
-      <li class="list-group-item">
-        <strong><%= a.fullName %></strong> — <%= a.date %> — <%= a.reason %>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong><%= a.fullName %></strong> — <%= a.date %> — <%= a.reason %>
+        </div>
+        <button 
+          class="btn btn-danger btn-sm" 
+          data-bs-toggle="modal" 
+          data-bs-target="#deleteModal" 
+          data-id="<%= a.id %>" 
+          data-name="<%= a.fullName %>"
+        >
+          Удалить
+        </button>
       </li>
     <% }) %>
   </ul>
@@ -40,6 +52,44 @@
 
   <a class="btn btn-outline-primary mt-3" href="/">Назад к пациентам</a>
   <a class="btn btn-outline-secondary mt-3 ms-2" href="/history">История болезней</a>
+
+  <!-- Модальное окно -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="POST" id="deleteForm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Удалить приём</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+          </div>
+          <div class="modal-body">
+            Вы уверены, что хотите удалить приём пациента <strong id="patientName"></strong>?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-danger">Удалить</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', event => {
+      const button = event.relatedTarget;
+      const id = button.getAttribute('data-id');
+      const name = button.getAttribute('data-name');
+
+      // Обновляем текст в модалке
+      const patientName = deleteModal.querySelector('#patientName');
+      patientName.textContent = name;
+
+      // Обновляем action формы на удаление
+      const deleteForm = deleteModal.querySelector('#deleteForm');
+      deleteForm.action = `/appointments/${id}/delete`;
+    });
+  </script>
 
 </body>
 </html>

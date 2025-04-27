@@ -91,6 +91,16 @@ app.post('/api/appointments', (req, res) => {
   );
 });
 
+app.post('/appointments/:id/delete', (req, res) => {
+  const { id } = req.params;
+
+  db.run('DELETE FROM appointments WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).send('Ошибка удаления приёма');
+    res.redirect('/appointments');
+  });
+});
+
+
 // API: Medical History
 app.post('/api/history', (req, res) => {
   const { patientId, diagnosis, notes } = req.body;
